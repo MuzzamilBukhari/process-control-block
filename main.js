@@ -16,7 +16,7 @@ class PCB {
 
 let totalExeTime = 0;
 let PCBs = [];
-let Processes = [];
+let processes = [];
 
 // Capture the number of processes and generate input fields for execution times
 document.getElementById("numProcesses").addEventListener("change", function () {
@@ -48,7 +48,7 @@ document.getElementById("numProcesses").addEventListener("change", function () {
 document.getElementById("startSimulation").addEventListener("click", () => {
   totalExeTime = 0;
   PCBs = [];
-  Processes = [];
+  processes = [];
 
   const n = Number(document.getElementById("numProcesses").value);
   const quantum = Number(document.getElementById("quantum").value);
@@ -56,11 +56,11 @@ document.getElementById("startSimulation").addEventListener("click", () => {
   for (let i = 0; i < n; i++) {
     const et = Number(document.getElementById(`executionTime${i}`).value);
     totalExeTime += et;
-    Processes[i] = new Array(et);
+    processes[i] = new Array(et);
     for (let j = 0; j < et; j++) {
-      Processes[i][j] = `Instruction ${j + 1}`;
+      processes[i][j] = `Instruction ${j + 1}`;
     }
-    const pcb = new PCB(i, Processes[i].length, `p${i + 1}`, "readyQueue");
+    const pcb = new PCB(i, processes[i].length, `p${i + 1}`, "readyQueue");
     PCBs.push(pcb);
   }
 
@@ -76,7 +76,7 @@ function simulateProcesses(n, quantum) {
   outputDiv.innerHTML = ""; // Clear previous output
 
   while (counter <= totalExeTime) {
-    if (PCBs[p].IR <= Processes[p].length) {
+    if (PCBs[p].IR <= processes[p].length) {
       // set start time if process run first time
       if (PCBs[p].startTime === -1) {
         PCBs[p].startTime = counter - 1;
@@ -98,7 +98,7 @@ function simulateProcesses(n, quantum) {
       }
 
       // calculate finish time, turn around time and utilization
-      if (PCBs[p].IR === Processes[p].length) {
+      if (PCBs[p].IR === processes[p].length) {
         PCBs[p].finishTime = counter;
         PCBs[p].TAtime = PCBs[p].finishTime - PCBs[p].arrTime;
         PCBs[p].utilization = parseFloat(
@@ -110,7 +110,7 @@ function simulateProcesses(n, quantum) {
       count++;
 
       // set the value of IR (Information register)
-      if (PCBs[p].IR === Processes[p].length) {
+      if (PCBs[p].IR === processes[p].length) {
         PCBs[p].IR = "Process completely executed";
       } else {
         PCBs[p].IR += 1;
