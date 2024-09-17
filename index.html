@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Process Control Block Simulation</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>PCB Simulation</h1>
+
+      <div class="form-group">
+        <label for="numProcesses">Number of Processes:</label>
+        <input type="number" id="numProcesses" min="1" class="input-field" />
+      </div>
+
+      <div id="processInputContainer"></div>
+      <!-- Dynamic process input fields -->
+
+      <div class="form-group">
+        <label for="quantum">Quantum:</label>
+        <input type="number" id="quantum" min="1" class="input-field" />
+      </div>
+
+      <div class="form-group">
+        <button id="startSimulation" class="btn">Start Simulation</button>
+      </div>
+
+      <div id="output" class="output"></div>
+    </div>
+
+    <script src="main.js"></script>
+  </body>
+</html>
