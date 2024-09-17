@@ -76,13 +76,13 @@ function simulateProcesses(n, quantum) {
   outputDiv.innerHTML = ""; // Clear previous output
 
   while (counter <= totalExeTime) {
-    if (p === n) {
-      p = 0;
-    }
     if (PCBs[p].IR <= Processes[p].length) {
+      // set start time if process run first time
       if (PCBs[p].startTime === -1) {
         PCBs[p].startTime = counter - 1;
       }
+
+      // set pc (program counter) to next uncomleted process
       let nextProcess = (p + 1) % n;
       while (
         PCBs[nextProcess].finishTime !== "calculating..." &&
@@ -91,7 +91,13 @@ function simulateProcesses(n, quantum) {
         nextProcess = (nextProcess + 1) % n; // Move to the next uncompleted process
       }
       // Set PC to the next uncompleted process
-      PCBs[p].PC = `starting address of p${nextProcess + 1}`;
+      if (counter === totalExeTime) {
+        PCBs[p].PC = `All processes completely executed!!`;
+      } else {
+        PCBs[p].PC = `starting address of  Process p${nextProcess + 1}`;
+      }
+
+      // calculate finish time, turn around time and utilization
       if (PCBs[p].IR === Processes[p].length) {
         PCBs[p].finishTime = counter;
         PCBs[p].TAtime = PCBs[p].finishTime - PCBs[p].arrTime;
@@ -99,22 +105,27 @@ function simulateProcesses(n, quantum) {
           (PCBs[p].exeTime / PCBs[p].TAtime).toFixed(2)
         );
       }
+
+      // increment to run next quantum
       count++;
+
+      // set the value of IR (Information register)
       if (PCBs[p].IR === Processes[p].length) {
         PCBs[p].IR = "Process completely executed";
       } else {
         PCBs[p].IR += 1;
       }
+
       PCBs[p].waitTime = `${PCBs[p].startTime - PCBs[p].arrTime} quantum`;
       displayPCBInfo(PCBs[p], counter);
 
       if (count === quantum) {
         count = 0; // Reset count
-        p++; // Move to the next process
+        p = (p + 1) % n; // Move to the next process
       }
       counter++;
     } else {
-      p++;
+      p = (p + 1) % n;
     }
   }
 }
@@ -126,13 +137,13 @@ function displayPCBInfo(pcb, counter) {
   pcbBlock.classList.add("process-block");
 
   pcbBlock.innerHTML = `
-      <p>After running ${counter}th quantum</p>
+      <p>After running quantum ${counter} :</p>
       <h3>Process Control Block of Process: ${pcb.processId}</h3>
       <p>Arrival Time: ${pcb.arrTime} quantum</p>
       <p>Execution Time: ${pcb.exeTime} quantums</p>
       <p>Start Time: ${pcb.startTime} quantum</p>
-      <p>Finish Time: ${pcb.finishTime} quantum</p>
-      <p>Turnaround Time: ${pcb.TAtime}</p>
+      <p>Finish Time: ${pcb.finishTime} quantums</p>
+      <p>Turnaround Time: ${pcb.TAtime} quantums</p>
       <p>Wait Time: ${pcb.waitTime}</p>
       <p>Utilization: ${pcb.utilization}</p>
       <p>Program Counter (PC): ${pcb.PC}</p>
