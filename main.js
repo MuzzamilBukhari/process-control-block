@@ -102,7 +102,7 @@ function simulateProcesses(n, quantum) {
       ) {
         nextProcess = (nextProcess + 1) % n; // Move to the next uncompleted process
       }
-      // Set PC to the next uncompleted process
+
       counter === totalExeTime
         ? (PCBs[p].PC = "All processes completely executed!!")
         : (PCBs[p].PC = `starting address of  Process p${nextProcess + 1}`);
@@ -116,13 +116,12 @@ function simulateProcesses(n, quantum) {
         );
       }
 
-      // increment to run next quantum
-      count++;
-
       // set the value of IR (Instruction register)
       if (PCBs[p].IR === processes[p].length) {
         PCBs[p].IR = "Process completely executed";
       } else {
+        // increment to run next quantum
+        count++;
         PCBs[p].IR += 1;
       }
 
@@ -134,6 +133,7 @@ function simulateProcesses(n, quantum) {
       }
       counter++;
     } else {
+      count = 0;
       p = (p + 1) % n;
     }
   }
